@@ -7,3 +7,16 @@ services:
       - ./:/app:delegated
     ports:
       - '8000:80'
+    links: 
+      - mysql:mysql 
+  mysql: #optional
+    image: mysql:5.7.22
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    environment: 
+      - MYSQL_ROOT_PASSWORD=root 
+    tty: true 
+    stdin_open: true 
+    ports:
+      - "3308:3306"
+      - "33080:33060"
