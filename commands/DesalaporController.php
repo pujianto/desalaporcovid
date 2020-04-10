@@ -30,10 +30,35 @@ class DesalaporController extends Controller
         }
         $this->refreshDbStructures();
         $this->insertInitialData();
+
+        $username = 'superadmin';
+        $password = $this->randomPassword(8);
+        $this->stdout("\n\n\n");
+        $this->stdout("Membuat user baru dengan username: ");
+        $this->stdout("superadmin\n", Console::BOLD);
+        $this->stdout("Password: ");
+        $this->stdout($password, Console::BOLD);
+        $this->stdout("\n\n\n");
+        $this->actionAddsuperadmin($username, $password);
         $this->stdout("Proses selesai\n", Console::BOLD);
         return ExitCode::OK;
     }
 
+
+    public function actionAddsuperadmin($username = 'superadmin', $password = '')
+    {
+        $user = new \app\models\User;
+        $user->username = $username;
+        $user->password = md5($password);
+        $user->userType = \app\models\User::LEVEL_ADMIN;
+        $user->status = \app\models\User::STATUS_ACTIVE;
+        return $user->save();
+    }
+
+
+    protected function randomPassword( $length ) {
+        return substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'),0,$length);
+    }
 
     protected function refreshDbStructures()
     {
