@@ -11,6 +11,23 @@ Penjelasan singkat aplikasi ini sebagai berikut :
   - Data laporan warga kemudian akan di verifikasi dan divalidasi oleh posko yang didirikan di setiap wilayah (misal: RT / RW / Puskesmas).
   - Admin di level Desa, Kecamatan, Kab / Kota, dan Provinsi dapat memantau data laporan warga dan memantau kondisi warga terlapor secara cepat.
 
+
+# Petunjuk Instalasi 
+## Docker Compose
+
+### Mempersiapkan source
+
+- `git clone git@github.com:cekdiri/desalaporcovid.git`
+- `cd desalaporcovid`
+- `docker-compose up`
+- Buka shell baru & buat database di mysql container. `docker exec -t desalaporcovid_mysql_1 mysql -uroot -proot -e "create database desalaporcovid"`
+- Ubah konfigurai di `config/db-local.php`, sesuaikan nama database dan parameter lainnya. Untuk database hostname gunakan `mysql`.
+- Jalankan migrasi & masukan data awal `docker exec -it desalaporcovid_php_1 php yii desalapor/install`
+
+### 
+
+
+
 # Fitur Desa Lapor Covid!
 
     Tipe Pengguna : Warga 
