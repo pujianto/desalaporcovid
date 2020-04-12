@@ -1,0 +1,40 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deploy with rsync
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches:
+      - master
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build-and-deploy"
+  build-and-deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        ref: master
+
+    # Runs a single command using the runners shell
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+    # Runs a set of commands using the runners shell
+    - name: deploy to server
+      uses: AEnterprise/rsync-deploy@v1.0
+      env:
+        DEPLOY_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        ARGS: "-avP --exclude='web/assets' --exclude='runtime' --exclude='config/*' --exclude='.git'"
+        SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        FOLDER: "./"
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        USERNAME: ${{ secrets.USERNAME }}
+        SERVER_DESTINATION: ${{ secrets.SERVER_DESTINATION }}
